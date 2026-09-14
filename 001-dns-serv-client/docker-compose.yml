@@ -11,6 +11,7 @@ services:
     command: ["named", "-g", "-c", "/etc/bind/named.conf"]
     networks:
       lab-net:
+        ipv4_address: 172.18.0.2   # ns1
 
   dns-servl:
     image: dns-lab-debian:trixie-serv
@@ -22,6 +23,7 @@ services:
     command: ["named", "-g", "-c", "/etc/bind/named.conf"]
     networks:
       lab-net:
+        ipv4_address: 172.18.0.3   # ns2
 
   dns-client:
     image: dns-lab-debian:trixie
@@ -29,7 +31,11 @@ services:
     restart: always
     networks:
       lab-net:
+        ipv4_address: 172.18.0.4   # ns1
 
 networks:
   lab-net:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
