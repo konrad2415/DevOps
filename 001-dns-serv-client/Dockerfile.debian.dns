@@ -1,0 +1,31 @@
+FROM debian:trixie
+
+RUN apt update && \
+    DEBIAN_FRONTEND=noninteractive apt install -y \
+        openssh-server \
+        openssh-client \
+        iputils-ping \
+        dnsutils \
+        bind9-utils \
+        bind9-host \
+        net-tools \
+        iproute2 \
+        traceroute \
+        mtr-tiny \
+        curl \
+        wget \
+        vim \
+        nano \
+        less \
+        procps \
+        lsof \
+        tcpdump \
+        nmap \
+        netcat-openbsd \
+        telnet \
+        whois \
+        ca-certificates bind9 && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
+
+CMD ["tail", "-f", "/dev/null"]

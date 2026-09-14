@@ -1,0 +1,12 @@
+//
+// Do any local configuration here
+//
+zone "mitux.es" {
+  type primary;
+  file "/etc/bind/zones/db.mitux.es";
+};
+
+zone "0.18.172.in-addr.arpa" {
+  type primary;
+  file "/etc/bind/zones/db.0.18.172";
+};
