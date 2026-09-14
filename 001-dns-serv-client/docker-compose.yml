@@ -1,13 +1,24 @@
 version: '3.8'
 
 services:
-  dns-serv:
+  dns-servm:
     image: dns-lab-debian:trixie-serv
-    container_name: dns-serv
+    container_name: dns-servm
     hostname: ns1
     restart: always
     volumes:
       - ./bind:/etc/bind
+    command: ["named", "-g", "-c", "/etc/bind/named.conf"]
+    networks:
+      lab-net:
+
+  dns-servl:
+    image: dns-lab-debian:trixie-serv
+    container_name: dns-servl
+    hostname: ns2
+    restart: always
+    volumes:
+      - ./bind-nsl:/etc/bind
     command: ["named", "-g", "-c", "/etc/bind/named.conf"]
     networks:
       lab-net:
