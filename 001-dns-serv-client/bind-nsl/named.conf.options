@@ -1,3 +1,39 @@
+
+
+acl "lan" {
+    172.18.0.0/24;
+};
+
+include "/etc/bind/rndc.key";	
+controls {
+    inet 127.0.0.1 port 953
+        allow { 127.0.0.1; } keys { "rndc-key"; };
+};
+
 options {
-	directory "/var/cache/bind";
+    directory "/var/cache/bind";
+
+    listen-on { 127.0.0.1; 172.18.0.3; };
+    listen-on-v6 { none; };
+
+    // El esclavo también puede responder recursivamente a la LAN
+    recursion yes;
+    allow-recursion { lan; };
+    allow-query     { lan; };
+    allow-query-cache { lan; };
+
+    // El esclavo no transfiere zonas a nadie (o solo a ns1 si quieres)
+    allow-transfer { none; };
+
+    // Ocultar información del servidor
+    version none;
+    hostname none;
+    server-id none;
+
+    forwarders {
+        172.18.0.2;
+        8.8.8.8;
+        1.1.1.1;
+    };
+
 };

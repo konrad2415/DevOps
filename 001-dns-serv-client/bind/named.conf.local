@@ -5,12 +5,12 @@ zone "mitux.es" {
   type primary;
   file "/etc/bind/zones/db.mitux.es";
   allow-transfer { ns2; };
-  also-notify { 172.18.0.4; };
+  also-notify { 172.18.0.3; };
 };
 
 zone "0.18.172.in-addr.arpa" {
   type primary;
   file "/etc/bind/zones/db.0.18.172";
   allow-transfer { ns2; };
-  also-notify { 172.18.0.4; };
+  also-notify { 172.18.0.3; };
 };
