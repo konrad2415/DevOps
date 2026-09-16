@@ -12,6 +12,13 @@ services:
     networks:
       lab-net:
         ipv4_address: 172.18.0.2   # ns1
+    healthcheck:
+      test: ["CMD", "rndc", "status"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
 
   dns-servl:
     image: dns-lab-debian:trixie-serv
@@ -24,6 +31,13 @@ services:
     networks:
       lab-net:
         ipv4_address: 172.18.0.3   # ns2
+    healthcheck:
+      test: ["CMD", "rndc", "status"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
 
   dns-client:
     image: dns-lab-debian:trixie
