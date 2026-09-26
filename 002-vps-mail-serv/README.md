@@ -16,6 +16,14 @@
       * no se puede subdelegar esa autoridad;
       * para correo, el servidor debe anunciarse utilizando ese hostname.
 
+> **Ejemplo de uso:**
+>
+> ```bash
+> dig @ns1.desec.io ktech.dedyn.io SOA
+> nslookup -type=NS midominio.nat.cu
+> ```
+
+
 ## FREE DNS Srvice provider : DNSHE.
 ## Install
 .
