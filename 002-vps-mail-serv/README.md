@@ -16,17 +16,35 @@
       * no se puede subdelegar esa autoridad;
       * para correo, el servidor debe anunciarse utilizando ese hostname.
 
-> **Ejemplo de uso:**
+> **Comprovaciones:**
 >
 > ```bash
-> dig @ns1.desec.io ktech.dedyn.io SOA
-> nslookup -type=NS midominio.nat.cu
+> dig -x 152.206.201.17 +short
+> srv***-206152.vps.etecsa.cu. 
 > ```
+
+     * Por este registro PTR inverso al hostname autogenerado aunque los records MX y A apunten correctamente a nuestro dominio publicado el servidor de correo no funcionara correctamente.
+     * Se requiere que los punteros MX usen el hotname en forma de un CNAME 
+     * Registro a realizar mail.ztech.us.ci CNAME → srv**-206152.vps.etecsa.cu.
+     * En este caso de uso de VPS el nombre de nuestro DNS o zona creada debe ser referenciado como un alias amigable para que la identidad funcione apropiadamente.
+     * Lo importante a notar es que el proveedor de VPS nos obliga en este caso a usar un CANONICAL NAME (identificados o hostname) diferente del CNAME o nombre amigable para usuarios y busones de correo.
+TLS Policy
+  Se hará uso de 2 certificados TLS uno para nuestro dominio: mail.ztech.us.ci y otro para el hostname EHLO -> srv**-206152.vps.etecsa.cu
+  EL VPS Provider espera que hagamos 
+  ztech.us.ci (Dominio) ---->DNSHE DNS Provider 
+     DNSHE       -> VPS Pointer
+     MX record   -> VPS Hostname 
+     TXT records -> SPF/DKIM/DMARC (Aunque este VPS y cuenta con DKIM y DMARK)
+
 
 
 ## FREE DNS Srvice provider : DNSHE.
 ## Install
-.
+
+### DMARK: 
+    Type:TXT
+    Name:_dmarc
+    Content:v=DMARC1; p=none; rua=mailto:dmarc@ztech.us.ci
 ## Config Files and folders
 .
 ###   Protect DNS from becoming Open Resolver on recurssion 
