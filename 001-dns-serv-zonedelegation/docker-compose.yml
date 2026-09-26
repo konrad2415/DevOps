@@ -19,24 +19,6 @@ services:
       retries: 3
       start_period: 10s
 
-  dns-servz:
-    image: dns-lab-debian:trixie-serv
-    container_name: dns-servz
-    hostname: nslinux
-    restart: always
-    volumes:
-      - ./bind-dnslinx:/etc/bind
-    command: ["named", "-g", "-c", "/etc/bind/named.conf"]
-    networks:
-      lab-net:
-        ipv4_address: 172.18.0.8   # nslinux
-    healthcheck:
-      test: ["CMD", "rndc", "status"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-
 
   dns-servl:
     image: dns-lab-debian:trixie-serv
@@ -63,7 +45,7 @@ services:
     restart: always
     networks:
       lab-net:
-        ipv4_address: 172.18.0.4   # ns1
+        ipv4_address: 172.18.0.4   # client
 
 networks:
   lab-net:

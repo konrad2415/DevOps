@@ -15,14 +15,14 @@ controls {
 options {
 	directory "/var/cache/bind";
     // Escuchar en loopback y en la IP del contenedor
-    listen-on { 127.0.0.1; 172.18.0.2; };
+    listen-on { any; };   # { 127.0.0.1; 172.18.0.2; };
     listen-on-v6 { none; };
 
-    // Recursión solo para la LAN
+    // Recursion solo para la LAN
     recursion yes;
-    allow-recursion { lan; };
-    allow-query     { lan; };
-    allow-query-cache { lan; };
+    allow-recursion { any; };    //{ lan; };
+    allow-query { any; };        //{ lan; };
+    allow-query-cache { any; };         //{ lan; };
 
     // Transferencias de zona solo a ns2
     allow-transfer { ns2; };

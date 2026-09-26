@@ -1,0 +1,18 @@
+$TTL 86400;
+@   IN   SOA  ns1.mitux.es. admin.mitux.es.(
+    2026091301 ; SERIAL
+    3600       ; REFRESH
+    600        ; RETRY
+    86400      ; EXPIRE
+    600        ; NEGATIVE TTL    
+);  
+
+; Authoritative DNS servers
+@ IN NS ns1.mitux.es.
+@ IN NS ns2.mitux.es.
+
+; Reverse DNS records
+2 IN PTR ns1.mitux.es.
+3 IN PTR ns2.mitux.es.
+4 IN PTR www.mitux.es.
+5 IN PTR mail.mitux.es.
