@@ -1,9 +1,10 @@
-# Mail SERVER POC deploying Debian Based
+# Mail SERVER POC deploying Docker over Debian Based
 
-## VPS Provider - ETECSA Service 
-  * ETECSA VPS genera automaticamente registros A/PTR con hostname e IP del pool publico disponible.
+## VPS Provider -  
+  * El VPS provider de ETECSA genera automaticamente registros A/PTR con hostname e IP del pool publico disponibles.
     Estos punteros DNS no son transferibles ni modificables bajo las reglas del service provider.
-    Consultar la documentacion provista en el anexo especificado. en el archivo: ETECSA-VPS-Management.md
+    
+    [Consultar la documentacion](https://github.com/konrad2415/DevOps/blob/main/002-vps-mail-serv/ETECSA-VPS-Management.md)
   * FQDN - Fully qualify domain name
     Hostname de ETECSA
     DNS : *-206152.vps.etecsa.cu  
