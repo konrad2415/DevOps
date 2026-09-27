@@ -1,0 +1,157 @@
+services:
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - /opt/mailu/redis:/data
+    networks:
+      - default
+
+  resolver:
+    image: ghcr.io/mailu/unbound:2024.06
+    restart: always
+    env_file:
+      - mailu.env
+    networks:
+      default:
+        ipv4_address: 192.168.203.254
+
+  front:
+    image: ghcr.io/mailu/nginx:2024.06
+    restart: always
+    env_file:
+      - mailu.env
+    extra_hosts:
+      - "mail.ztech.us.ci:127.0.0.1"
+    ports:
+      - "152.206.201.17:80:80"
+      - "152.206.201.17:443:443"
+      - "152.206.201.17:25:25"
+      - "152.206.201.17:465:465"
+      - "152.206.201.17:587:587"
+      - "152.206.201.17:143:143"
+      - "152.206.201.17:993:993"
+      - "152.206.201.17:4190:4190"
+    volumes:
+      - /opt/mailu/certs:/certs
+      - /opt/mailu/overrides/nginx:/overrides:ro
+    networks:
+      - default
+      - webmail
+    depends_on:
+      - resolver
+    dns:
+      - 192.168.203.254
+
+  admin:
+    image: ghcr.io/mailu/admin:2024.06
+    restart: always
+    env_file:
+      - mailu.env
+    volumes:
+      - /opt/mailu/data:/data
+      - /opt/mailu/dkim:/dkim
+    networks:
+      - default
+    depends_on:
+      - redis
+      - resolver
+    dns:
+      - 192.168.203.254
+
+  imap:
+    image: ghcr.io/mailu/dovecot:2024.06
+    restart: always
+    env_file:
+      - mailu.env
+    volumes:
+      - /opt/mailu/mail:/mail
+      - /opt/mailu/overrides/dovecot:/overrides:ro
+    networks:
+      - default
+    depends_on:
+      - front
+      - resolver
+    dns:
+      - 192.168.203.254
+
+  smtp:
+    image: ghcr.io/mailu/postfix:2024.06
+    restart: always
+    env_file:
+      - mailu.env
+    volumes:
+      - /opt/mailu/mailqueue:/queue
+      - /opt/mailu/overrides/postfix:/overrides:ro
+    networks:
+      - default
+    depends_on:
+      - front
+      - resolver
+    dns:
+      - 192.168.203.254
+
+  antispam:
+    image: ghcr.io/mailu/rspamd:2024.06
+    hostname: antispam
+    restart: always
+    env_file:
+      - mailu.env
+    volumes:
+      - /opt/mailu/filter:/var/lib/rspamd
+      - /opt/mailu/overrides/rspamd:/overrides:ro
+    networks:
+      - default
+      - clamav
+    depends_on:
+      - front
+      - redis
+      - antivirus
+      - resolver
+    dns:
+      - 192.168.203.254
+  antivirus:
+    image: clamav/clamav-debian:1.4
+    restart: always
+    volumes:
+      - /opt/mailu/clamav:/var/lib/clamav
+    networks:
+      - clamav
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "kill -0 `cat /tmp/clamd.pid` && kill -0 `cat /tmp/freshclam.pid`"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  webmail:
+    image: ghcr.io/mailu/webmail:2024.06
+    restart: always
+    env_file:
+      - mailu.env
+    volumes:
+      - /opt/mailu/webmail:/data
+      - /opt/mailu/overrides/roundcube:/overrides:ro
+    networks:
+      - webmail
+    depends_on:
+      - front
+
+networks:
+
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.203.0/24
+
+  webmail:
+    driver: bridge
+
+  clamav:
+    driver: bridge
