@@ -17,7 +17,7 @@
       * no se puede subdelegar esa autoridad;
       * para correo, el servidor debe anunciarse utilizando ese hostname.
 
-> **Comprovaciones:**
+> **Comprobaciones:**
 >
 > ```bash
 > dig -x 152.206.201.17 +short
